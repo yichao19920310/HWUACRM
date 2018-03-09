@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd 
+	">
+	<!-- 扫描@Component,并生成相关类的实例，加载到spring容器中 -->
+	<context:component-scan base-package="com.yc" >
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
+     	<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>  
+     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>  
+	</context:component-scan>
+	<!-- 生成数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql:///mybatis?characterEncoding=UTF8"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value=""></property>
+	</bean>
+	<!-- 由spring生成sqlSessionFactory对象 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 给指定包下的实体类统一添加别名 -->
+		<property name="typeAliasesPackage" value="com.yc.bean" />
+		<!-- 指定映射文件所在目录 -->
+		<property name="mapperLocations" value="classpath:mapper/*.xml" />
+	</bean>
+	<!-- 将mybatis生成的持久层代理实现类对象放入spring容器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="basePackage" value="com.yc.dao" />
+	</bean>
+	
+	<!-- 添加事务控制 -->
+	<!-- 添加平台事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 将事务托管给注解 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

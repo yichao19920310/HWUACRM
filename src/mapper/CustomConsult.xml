@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.CustomConsultDao">
+
+	<!-- 获得咨询报告数据总数 -->
+	<select id="queryCount" resultType="Integer">
+		select count(1) from consultrecord cr 
+		LEFT JOIN custom c ON cr.customId = c.id 
+		<where>
+			cr.consultManId = #{consultManId} 
+			and 
+			<if test="customName != null">
+				c.name like #{customName}
+			</if>
+			<if test="customPhoneNo != null">
+				c.phoneNo like #{customPhoneNo}
+			</if>
+			<if test="consultDate != null">
+				cr.consultDate between #{consultDate} and #{endDate}
+			</if>
+			<if test="customName == null and customPhoneNo == null and consultDate == null">
+				DATE_FORMAT(cr.consultDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 根据各种条件查询咨询记录 -->
+	<select id="queryConsult" resultType="ConsultRecord">
+		<bind name="start" value="(page-1)*rows" />		
+		select cr.id,cr.customId,c.name customName,
+		c.phoneNo customPhoneNo,cr.consultStatu,
+		cr.consultDate,cr.result		 
+		from consultrecord cr 
+		LEFT JOIN custom c 
+		ON cr.customId = c.id 
+		<where>
+			cr.consultManId = #{consultManId} 
+			and 
+			<if test="customName != null">
+				c.name like #{customName}
+			</if>
+			<if test="customPhoneNo != null">
+				c.phoneNo like #{customPhoneNo}
+			</if>
+			<if test="consultDate != null">
+				cr.consultDate between #{consultDate} and #{endDate}
+			</if>
+			<if test="customName == null and customPhoneNo == null and consultDate == null">
+				DATE_FORMAT(cr.consultDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+			</if>
+		</where>	
+		limit #{start ,javaType=int},#{rows}
+		
+	</select>
+
+	<!-- 更新咨询记录表状态 -->
+	<update id="updateRecord">
+		
+		update consultrecord 
+		set
+		consultStatu = #{consultStatu}
+		 where id = #{id}
+	</update>
+	
+	<!-- 添加咨询记录表备注 -->
+	<update id="addResult">
+		update consultrecord set
+		result = concat(ifnull(concat(result,','),''),#{result})
+		where id = #{id}
+	</update>
+</mapper>

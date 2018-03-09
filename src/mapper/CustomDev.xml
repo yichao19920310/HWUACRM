@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.CustomDevDao">
+
+	<!-- 获得客户销售信息数据总数 -->
+	<select id="queryCount" resultType="Integer">
+		select count(1) from customInfo 
+		where followManId = #{followManId} 
+		and 
+		<if test="src==0">
+		to_days(startDate) = to_days(NOW()) 
+		</if>
+		<if test="src==1">
+		to_days(planDate) = to_days(NOW()) 
+		</if>
+		<if test="src==2">
+		to_days(startDate) &lt; to_days(NOW()) and statu = '0' 
+		</if>
+		<if test="src==3">
+		DATE_FORMAT( startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		</if>
+	</select>
+	
+	
+	<!-- 根据各种条件查询客户销售信息 -->
+	<select id="queryCustomInfo" resultType="CustomInfo">
+		<bind name="start" value="(page-1)*rows" />
+		select ci.*,c.name customName,c.phoneNo customPhoneNo 
+		from customInfo ci
+		left join custom c
+		on ci.customId = c.id
+		where ci.followManId = #{followManId} 
+		and 
+		<if test="src==0">
+		to_days(ci.startDate) = to_days(NOW()) 
+		</if>
+		<if test="src==1">
+		to_days(ci.planDate) = to_days(NOW()) 
+		</if>
+		<if test="src==2">
+		to_days(ci.startDate) &lt; to_days(NOW()) and ci.statu = '0' 
+		</if>
+		<if test="src==3">
+		DATE_FORMAT( ci.startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		</if>
+		limit #{start},#{rows}
+		
+	</select>
+
+	<!-- 更新客户销售信息表 -->
+	<update id="updateCustomInfo">
+		update customInfo 
+		<set>
+			statu = #{statu},
+			<if test="planDate != null">
+			planDate = #{planDate}
+			</if>
+		</set> 
+		where id = #{id}		
+	</update>
+	
+	<!-- 添加客户销售信息表备注 -->
+	<update id="addMark">
+		update customInfo set
+		mark = concat(ifnull(concat(mark,','),''),#{mark})
+		where id = #{id}
+	</update>
+</mapper>

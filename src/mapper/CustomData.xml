@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.CustomDataDao">
+
+	<!-- 获得客户数据总数 -->
+	<select id="queryCount" resultType="Integer">
+		select count(1) from custom 
+		<where>
+			<if test="name != null">
+				name like #{name}
+			</if>
+			<if test="customStatu != null">
+				customStatu = #{customStatu}
+			</if>
+			<if test="inviteName != null">
+				inviteName like #{inviteName}
+			</if>
+			<if test="phoneNo != null">
+				phoneNo like #{phoneNo}
+			</if>
+			<if test="createDate != null">
+				createDate = #{createDate}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 根据各种条件查询客户 -->
+	<select id="queryCustom" resultType="Custom">
+		<bind name="start" value="(page-1)*rows" />
+		select * from custom
+		<where>
+			<if test="name != null">
+				name like #{name}
+			</if>
+			<if test="customStatu != null">
+				customStatu = #{customStatu}
+			</if>
+			<if test="inviteName != null">
+				inviteName like #{inviteName}
+			</if>
+			<if test="phoneNo != null">
+				phoneNo like #{phoneNo}
+			</if>
+			<if test="createDate != null">
+				createDate = #{createDate}
+			</if>
+		</where>
+		limit #{start},#{rows}
+		
+	</select>
+
+	<!-- 更改客户信息 -->
+	<update id="updateCustom">
+		UPDATE custom SET 
+		name = #{name},
+		education = #{education},
+		phoneNo = #{phoneNo},
+		qq = #{qq},
+		email = #{email},
+		customStatu = #{customStatu}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取新增未分配客户列表 -->
+	<select id="getUnallotedCustom" resultType="Custom">
+		select * from custom 
+		where customStatu = '0'	
+	</select>
+	
+	<!-- 批量分配新增未上门客户,插入销售客户信息表 -->
+	<insert id="insertCustomInfo">
+		insert into customInfo 
+		(customId,followManId,statu,startDate)
+		values
+		<foreach collection="list" item="customInfo" separator=",">
+		(#{customInfo.customId},#{customInfo.followManId},#{customInfo.statu},NOW())
+		</foreach>
+	</insert>
+	
+	<!-- 分配客户后更改客户状态 (可批量更改)-->
+	<update id="updateCustomStatuWhenAllot">
+		update custom set customStatu = #{customStatu} 
+		where id in 
+		<foreach collection="list" item="custom" open="(" close=")" separator=",">
+			#{custom.id}
+		</foreach>
+	</update>
+	
+	<!-- 分配新增已上门客户给线下咨询师 插入咨询记录表 -->
+	<insert id="insertConsultRecord">
+		insert into consultRecord 
+		(customId,consultStatu,consultManId,consultDate) 
+		values 
+		(#{customId},'0',#{consultManId},NOW())
+	</insert>
+	
+	<!-- 插入单个客户 -->
+	<insert id="insertCustom">
+		insert into custom 
+		(name,education,phoneNo,qq,email,customStatu,createDate) 
+		values 
+		(#{name},#{education},#{phoneNo},#{qq},#{email},#{customStatu},NOW())
+	</insert>
+	
+	<!-- 同时更新死单 -->
+	<update id="updateCustomStatuWhenDead">
+		update custom 
+		set customStatu = '4' 
+		where id = #{customId};
+	</update>
+</mapper>

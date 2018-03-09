@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.UserDao">
+
+  <!-- <resultMap type="User" id="UserResult">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="username" jdbcType="CHAR" property="username"/>
+    <result column="pass" jdbcType="CHAR" property="pass"/>
+    <result column="realname" jdbcType="VARCHAR" property="realname"/>
+    <result column="age" jdbcType="INTEGER" property="age"/>
+  </resultMap> -->
+
+  <!-- 登录 -->
+  <select id="getUserByNameAndPass" resultType="Employee">
+    SELECT * FROM employee where username = #{username} and pass = #{pass} 
+  </select>
+  
+  <!-- 获取用户权限列表 -->
+  <select id="getRightsByUser" resultType="Right">
+    SELECT rid,rightName,rightType,url,pid FROM rights WHERE rid IN (
+	SELECT rightId FROM jobright WHERE jobInfoId = #{jobInfoId})
+  </select>
+	
+	<!-- 修改用户个人信息 -->
+	<update id="updateUser">
+	UPDATE employee set nickname = #{nickname},phoneNo = #{phoneNo},officeTel = #{officeTel}
+	WHERE id = #{id}
+	</update>
+  
+  	<!-- 修改个人密码 -->
+  	<update id="updatePass">
+  	UPDATE employee set pass = #{newPass} 
+  	WHERE id = #{id} 
+  	AND pass = #{pass}
+  	</update>
+  	
+  	<!-- 申请重置密码 -->
+  	<insert id="insertResetPass">
+  	INSERT INTO resetpass 
+  	(username,phoneNo) 
+  	VALUES (#{username},#{phoneNo})
+  	</insert>
+ 
+  	<!-- 根据职位id获取员工集合 -->	
+  	<select id="getEmpByJobId" resultType="Employee">
+  		select * from employee 
+  		where jobInfoId = #{jobInfoId} 
+  		and workStatu = '1'
+  	
+  	</select>
+</mapper>
