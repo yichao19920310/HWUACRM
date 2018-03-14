@@ -57,7 +57,7 @@ public class CustomDataBizImpl implements CustomDataBiz {
 	public boolean allotCustom() {
 		
 		List<Custom> customList = customDataDao.getUnallotedCustom();
-		List<Employee> followManList = userDao.getEmpByJobId(8);
+		List<Employee> followManList = userDao.getFollowMan();
 		List<CustomInfo> customInfoList = new ArrayList<>();
 		int cuCount = customList.size();
 		int fmCount = followManList.size();
@@ -101,6 +101,7 @@ public class CustomDataBizImpl implements CustomDataBiz {
 		rInt += customDataDao.updateCustomStatuWhenAllot(data);
 		return rInt==2;
 	}
+	
 
 	@Override
 	public boolean addCustom(Custom custom) {

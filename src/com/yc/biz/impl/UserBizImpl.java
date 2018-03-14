@@ -61,4 +61,10 @@ public class UserBizImpl implements UserBiz {
 		return userDao.getEmpByJobId(jobInfoId);
 	}
 
+	@Override
+	public List<Employee> getEmpByDepart(Integer departmentId, Integer managerId) {
+		
+		return userDao.getEmpByDepartId(departmentId,managerId);
+	}
+
 }

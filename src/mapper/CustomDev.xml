@@ -14,10 +14,10 @@
 		to_days(startDate) = to_days(NOW()) 
 		</if>
 		<if test="src==1">
-		to_days(planDate) = to_days(NOW()) 
+		to_days(startDate) &lt; to_days(NOW()) and statu = '0' 	
 		</if>
 		<if test="src==2">
-		to_days(startDate) &lt; to_days(NOW()) and statu = '0' 
+		to_days(planDate) = to_days(NOW()) 
 		</if>
 		<if test="src==3">
 		DATE_FORMAT( startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
@@ -38,16 +38,15 @@
 		to_days(ci.startDate) = to_days(NOW()) 
 		</if>
 		<if test="src==1">
-		to_days(ci.planDate) = to_days(NOW()) 
+		to_days(ci.startDate) &lt; to_days(NOW()) and ci.statu = '0' 		
 		</if>
 		<if test="src==2">
-		to_days(ci.startDate) &lt; to_days(NOW()) and ci.statu = '0' 
+		to_days(ci.planDate) = to_days(NOW()) 
 		</if>
 		<if test="src==3">
 		DATE_FORMAT( ci.startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
 		</if>
 		limit #{start},#{rows}
-		
 	</select>
 
 	<!-- 更新客户销售信息表 -->

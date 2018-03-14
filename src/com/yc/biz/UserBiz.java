@@ -22,4 +22,6 @@ public interface UserBiz {
 
 	List<Employee> getEmpByJob(Integer jobInfoId);
 
+	List<Employee> getEmpByDepart(Integer departmentId, Integer managerId);
+
 }

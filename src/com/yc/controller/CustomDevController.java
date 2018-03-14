@@ -42,8 +42,10 @@ public class CustomDevController {
 		param.put("rows", Integer.parseInt(param.get("rows").toString()));
 		param.put("src", Integer.parseInt(param.get("src").toString()));
 		System.out.println(param);
+		
 		Integer total = customDevBiz.getQueryCount(param);
 		List<CustomInfo> list = customDevBiz.getCustomInfoList(param);
+		
 		Map<String,Object> data = new HashMap<>();
 		data.put("total", total);
 		data.put("rows", list);

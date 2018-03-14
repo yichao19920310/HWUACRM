@@ -8,16 +8,32 @@ public class Employee {
 	private String nickname;
 	private String realname;
 	private Integer jobInfoId;
+	private String job;
 	private Integer departmentId;
+	private String dname;
 	private String phoneNo;
 	private String officeTel;
 	private String workStatu;
 	
+	
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", username=" + username + ", pass=" + pass + ", nickname=" + nickname
-				+ ", realname=" + realname + ", jobInfoId=" + jobInfoId + ", departmentId=" + departmentId
-				+ ", phoneNo=" + phoneNo + ", officeTel=" + officeTel + ", workStatu=" + workStatu + "]";
+				+ ", realname=" + realname + ", jobInfoId=" + jobInfoId + ", job=" + job + ", departmentId="
+				+ departmentId + ", dname=" + dname + ", phoneNo=" + phoneNo + ", officeTel=" + officeTel
+				+ ", workStatu=" + workStatu + "]";
+	}
+	public String getJob() {
+		return job;
+	}
+	public void setJob(String job) {
+		this.job = job;
+	}
+	public String getDname() {
+		return dname;
+	}
+	public void setDname(String dname) {
+		this.dname = dname;
 	}
 	public Integer getId() {
 		return id;

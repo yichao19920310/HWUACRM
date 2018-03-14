@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.CountDao">
+
+	<!-- 根据员工id统计该员工本月客户开发数据 -->
+  <select id="countInfo" resultType="map">
+  	SELECT
+		IFNULL(MAX(if (b.statu = '0',b.counts,0)),0) as 'newAllot',
+		IFNULL(MAX(if (b.statu = '5',b.counts,0)),0) as 'invalid',
+		IFNULL(MAX(if (b.statu = '3',b.counts,0)),0) as 'visited',
+		IFNULL(MAX(if (b.statu = '1',b.counts,0)),0) as 'disConnect',
+		IFNULL(MAX(if (b.statu = '4',b.counts,0)),0) as 'denied',
+		IFNULL(MAX(if (b.statu = '2',b.counts,0)),0) as 'following',
+		IFNULL(SUM(b.counts),0) as 'total' 
+	FROM (
+		SELECT e.departmentId,c.statu ,count(c.statu) counts 
+		FROM  custominfo c LEFT JOIN employee e on e.id=c.followManId 
+		WHERE DATE_FORMAT( startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		AND c.followManId = #{followManId}
+		GROUP BY c.statu 
+	)as b 
+  </select>
+  
+  <!-- 根据部门id统计该部门本月客户开发数据 -->
+  <select id="countInfoForDepart" resultType="map">
+  	SELECT
+		IFNULL(MAX(if (b.statu = '0',b.counts,0)),0) as 'newAllot',
+		IFNULL(MAX(if (b.statu = '5',b.counts,0)),0) as 'invalid',
+		IFNULL(MAX(if (b.statu = '3',b.counts,0)),0) as 'visited',
+		IFNULL(MAX(if (b.statu = '1',b.counts,0)),0) as 'disConnect',
+		IFNULL(MAX(if (b.statu = '4',b.counts,0)),0) as 'denied',
+		IFNULL(MAX(if (b.statu = '2',b.counts,0)),0) as 'following',
+		IFNULL(SUM(b.counts),0) as 'total' 
+	FROM (
+		SELECT e.departmentId,c.statu ,count(c.statu) counts 
+		FROM  custominfo c LEFT JOIN employee e on e.id=c.followManId 
+		WHERE DATE_FORMAT( startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		GROUP BY c.statu, e.departmentId
+	)as b 
+	WHERE b.departmentId = #{departmentId}
+  </select>
+  
+  <!-- 根据员工id统计该员工本月客户咨询数据 -->
+  <select id="countConsult" resultType="map">
+  	SELECT
+		IFNULL(MAX(if (b.consultStatu = '0',b.counts,0)),0) as 'newAllot',
+		IFNULL(MAX(if (b.consultStatu = '1',b.counts,0)),0) as 'following',
+		IFNULL(MAX(if (b.consultStatu = '2',b.counts,0)),0) as 'signed',
+		IFNULL(MAX(if (b.consultStatu = '3',b.counts,0)),0) as 'denied',
+		IFNULL(MAX(if (b.consultStatu = '4',b.counts,0)),0) as 'refundment',
+		IFNULL(SUM(b.counts),0) as 'total' 
+	FROM (
+		SELECT e.departmentId,c.consultStatu ,count(c.consultStatu) counts 
+		FROM  consultrecord c LEFT JOIN employee e on e.id=c.consultManId 
+		WHERE DATE_FORMAT( consultDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		AND c.consultManId = #{consultManId}
+		GROUP BY c.consultStatu 
+	)as b 
+  </select>
+  
+  <!-- 根据部门id统计该部门本月客户咨询数据 -->
+  <select id="countConsultForDepart" resultType="map">
+  	SELECT
+		IFNULL(MAX(if (b.consultStatu = '0',b.counts,0)),0) as 'newAllot',
+		IFNULL(MAX(if (b.consultStatu = '1',b.counts,0)),0) as 'following',
+		IFNULL(MAX(if (b.consultStatu = '2',b.counts,0)),0) as 'signed',
+		IFNULL(MAX(if (b.consultStatu = '3',b.counts,0)),0) as 'denied',
+		IFNULL(MAX(if (b.consultStatu = '4',b.counts,0)),0) as 'refundment',
+		IFNULL(SUM(b.counts),0) as 'total' 
+	FROM (
+		SELECT e.departmentId,c.consultStatu ,count(c.consultStatu) counts 
+		FROM  consultrecord c LEFT JOIN employee e on e.id=c.consultManId 
+		WHERE DATE_FORMAT( consultDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		GROUP BY c.consultStatu, e.departmentId
+	)as b 
+	WHERE b.departmentId = #{departmentId}
+  </select>
+</mapper>

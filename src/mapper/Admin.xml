@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.AdminDao">
+
+<!-- 通过用户名查询员工,用于判断用户名是否存在 -->
+ <select id="getUserByUsername" resultType="Employee">
+ 	select * from employee where username = #{username}
+ </select>
+ 
+ <!-- 添加普通用户时获取部门列表(除去技术部) -->
+ <select id="getDepartment" resultType="Department">
+ 	select * from department where id != 1
+ </select>
+ 
+ <!-- 添加普通用户时获取对应部门职位列表 -->
+ <select id="getJobByDid" resultType="JobInfo">
+ 	select * from jobinfo where departmentId=#{departmentId}
+ </select>
+ 
+ <!-- 添加用户,密码默认123456,默认昵称与真实姓名一致 
+ if判断是否有job depart参数来确实是否是添加管理员-->
+ <insert id="insertUser" >
+ insert into employee 
+	(username,pass,nickname,realname,
+	jobInfoId,departmentId,phoneNo,officeTel,workStatu)
+	values 
+	(#{username},'7c4a8d09ca3762af61e59520943dc26494f8941b',#{realname},#{realname},
+	<if test="jobInfoId!=null">
+		#{jobInfoId}
+	</if>
+	<if test="jobInfoId==null">
+		2
+	</if>
+	,
+	<if test="departmentId!=null">
+		#{departmentId}
+	</if>
+	<if test="departmentId==null">
+		1
+	</if>
+	,#{phoneNo},#{officeTel},'1')
+ 
+ </insert>
+ 
+ <!-- 获取重置密码申请列表 -->
+ <select id="queryResetRequest" resultType="ResetPass">
+ 	select * from resetpass
+ </select>
+ 
+ <!-- 重置用户密码为123456 -->
+ <update id="resetPass">
+ 	update employee 
+ 	set pass = '7c4a8d09ca3762af61e59520943dc26494f8941b' 
+ 	where username = #{username} 
+ 	and phoneNo = #{phoneNo}
+ </update>
+ 
+ <!-- 重置密码操作过后删除申请(无论重置操作成功与否) -->
+ <delete id="deleteResetPass">
+ 	delete from resetpass 
+ 	where id = #{id}
+ </delete>
+ 
+ <!-- 获取所有员工集合 -->
+ <select id="getAllEmp" resultType="Employee">
+ 	select e.*,d.dname,j.job from employee e
+ 	left join department d on e.departmentId = d.id 
+ 	left join jobInfo j on e.jobInfoId = j.id 
+ 	where e.workStatu = '1'
+ </select>
+ 
+ <!-- 注销账户,更新状态 -->
+ <update id="cancelUser">
+ 	update employee 
+ 	set workStatu = '0' 
+ 	where username = #{username}
+ </update>
+</mapper>

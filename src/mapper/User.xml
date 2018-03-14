@@ -15,7 +15,9 @@
 
   <!-- 登录 -->
   <select id="getUserByNameAndPass" resultType="Employee">
-    SELECT * FROM employee where username = #{username} and pass = #{pass} 
+    SELECT * FROM employee where username = #{username} 
+    and pass = #{pass} 
+    and workStatu = '1' 
   </select>
   
   <!-- 获取用户权限列表 -->
@@ -48,6 +50,23 @@
   	<select id="getEmpByJobId" resultType="Employee">
   		select * from employee 
   		where jobInfoId = #{jobInfoId} 
+  		and workStatu = '1'
+  	
+  	</select>
+  	
+  	<!-- 获取销售人员集合(销售与线上咨询) -->
+  	<select id="getFollowMan" resultType="Employee">
+  		select * from employee 
+  		where jobInfoId in (5,8) 
+  		and workStatu = '1'
+  	
+  	</select>
+  	
+  	<!-- 根据部门id获取员工集合 通过经理id排除经理 -->
+  	<select id="getEmpByDepartId" resultType="Employee">
+  		select * from employee 
+  		where departmentId = #{departmentId} 
+  		and id != #{managerId} 
   		and workStatu = '1'
   	
   	</select>

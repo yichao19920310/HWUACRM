@@ -143,4 +143,12 @@ public class UserController {
 	}
 	
 	
+	@RequestMapping("empForDepart")
+	@ResponseBody
+	public List<Employee> empForDepart(Integer departmentId,Integer managerId){
+			
+		return userBiz.getEmpByDepart(departmentId,managerId);		
+	}
+	
+	
 }

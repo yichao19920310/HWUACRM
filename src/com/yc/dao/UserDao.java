@@ -21,6 +21,8 @@ public interface UserDao {
 	int insertResetPass(ResetPass resetPass);
 
 	List<Employee> getEmpByJobId(Integer jobInfoId);
+
+	List<Employee> getEmpByDepartId(@Param("departmentId") Integer departmentId,@Param("managerId") Integer managerId);
 	
-	
+	List<Employee> getFollowMan();
 }
