@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yc.dao.ExcelDao">
+
+<!-- 导出本周/本月客户数据 -->
+<select id="exportCustom" resultType="Custom">
+	select * from custom 
+	where  
+	<if test="type1 != null">
+	YEARWEEK(date_format(createDate,'%Y-%m-%d')) = YEARWEEK(now())
+	</if>
+	<if test="type2 != null">
+	DATE_FORMAT( createDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+	</if>
+</select>
+
+<!-- 导出本周/本月客户销售数据 -->
+<select id="exportCustomInfo" resultType="CustomInfo">
+	select ci.*,c.name customName,c.phoneNo customPhoneNo 
+	from customInfo ci left join custom c 
+	on ci.customId = c.id 
+	where  ci.followManId = #{followManId}
+	<if test="type1 != null">
+	and YEARWEEK(date_format(ci.startDate,'%Y-%m-%d')) = YEARWEEK(now())
+	</if>
+	<if test="type2 != null">
+	and DATE_FORMAT( ci.startDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+	</if>
+</select>
+
+<!-- 导出本周/本月客户咨询数据 -->
+<select id="exportConsultRecord" resultType="ConsultRecord">
+	select cr.*,c.name customName,c.phoneNo customPhoneNo 
+	from ConsultRecord cr left join custom c 
+	on cr.customId = c.id 
+	where  cr.consultManId = #{consultManId}
+	<if test="type1 != null">
+	and YEARWEEK(date_format(cr.consultDate,'%Y-%m-%d')) = YEARWEEK(now())
+	</if>
+	<if test="type2 != null">
+	and DATE_FORMAT( cr.consultDate, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+	</if>
+</select>
+<insert id="batchInsertCustom">
+	insert into custom 
+	(name,education,phoneNo,qq,email,customStatu,createDate,inviteName) 
+	values
+	<foreach collection="list" item="custom" separator=",">
+	(#{custom.name},#{custom.education},#{custom.phoneNo},
+	#{custom.qq},#{custom.email},#{custom.customStatu},now(),#{custom.inviteName})
+	</foreach>
+	
+
+</insert>
+</mapper>
