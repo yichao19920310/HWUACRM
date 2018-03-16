@@ -29,4 +29,6 @@ public interface CustomDataDao {
 
 	Integer updateCustomStatuWhenDead(Integer customId);
 
+	Integer updateCustomStatu(@Param("customId") Integer customId,@Param("customStatu") String customStatu);
+
 }

@@ -112,4 +112,11 @@
 		set customStatu = '4' 
 		where id = #{customId};
 	</update>
+	
+	<!-- 客户信息表/客户咨询表状态特殊变更同步更新客户状态 -->
+	<update id="updateCustomStatu">
+		update custom 
+		set customStatu = #{customStatu} 
+		where id = #{customId}
+	</update>
 </mapper>

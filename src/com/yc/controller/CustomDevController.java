@@ -53,12 +53,28 @@ public class CustomDevController {
 		
 	}
 	
+	/**
+	 * 
+	  * @Title: updateCustomInfo   
+	  * @Description: 更新客户销售信息表   
+	  * @param: customInfo      
+	  * @return: void      
+	  * @throws
+	 */
 	@RequestMapping("updateCustomInfo")
 	@ResponseBody
 	public void updateCustomInfo(CustomInfo customInfo) {
 		customDevBiz.updateCustomInfo(customInfo);
 	}
 	
+	/**
+	 * 
+	  * @Title: addMark   
+	  * @Description: 添加备注   
+	  * @param: customInfo     
+	  * @return: String      
+	  * @throws
+	 */
 	@RequestMapping("addMark")
 	@ResponseBody
 	public String addMark(CustomInfo customInfo) {

@@ -40,6 +40,8 @@ public class CustomConsultBizImpl implements CustomConsultBiz {
 		rInt += customConsultDao.updateRecord(consultRecord);
 		if("3".equals(consultRecord.getConsultStatu())&&rInt==1) {
 			rInt += customDataDao.updateCustomStatuWhenDead(consultRecord.getCustomId());
+		}else if("2".equals(consultRecord.getConsultStatu())&&rInt==1) {
+			rInt += customDataDao.updateCustomStatu(consultRecord.getCustomId(), "5");
 		}
 		return rInt;
 	}

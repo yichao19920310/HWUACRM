@@ -55,7 +55,10 @@
 		<set>
 			statu = #{statu},
 			<if test="planDate != null">
-			planDate = #{planDate}
+			planDate = #{planDate},
+			</if>
+			<if test="!&quot;0&quot;.equals(statu)">
+			lastFollowDate = now()
 			</if>
 		</set> 
 		where id = #{id}		

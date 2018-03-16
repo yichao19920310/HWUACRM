@@ -38,6 +38,8 @@ public class CustomDevBizImpl implements CustomDevBiz {
 		rInt += customDevDao.updateCustomInfo(customInfo);
 		if("4".equals(customInfo.getStatu())&&rInt==1) {
 			rInt += customDataDao.updateCustomStatuWhenDead(customInfo.getCustomId());
+		}else if("3".equals(customInfo.getStatu())&&rInt==1){
+			rInt += customDataDao.updateCustomStatu(customInfo.getCustomId(),"1");
 		}
 		return rInt;
 	}
