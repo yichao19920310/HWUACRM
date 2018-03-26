@@ -41,4 +41,37 @@
     <filter-name>CharacterEncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>  
+  <filter>
+  	<filter-name>LoginValidationFilter</filter-name>
+  	<filter-class>com.yc.filter.LoginValidationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>LoginValidationFilter</filter-name>
+  	<url-pattern>/main.jsp</url-pattern>
+  	<url-pattern>/count.jsp</url-pattern>
+  	<url-pattern>/customconsult.jsp</url-pattern>
+  	<url-pattern>/customdata.jsp</url-pattern>
+  	<url-pattern>/customdev.jsp</url-pattern>
+  	<url-pattern>/department.jsp</url-pattern>
+  	<url-pattern>/jobmanage.jsp</url-pattern>
+  	<url-pattern>/report.jsp</url-pattern>
+  	<url-pattern>/usermanage.jsp</url-pattern>
+  	<url-pattern>/rightmanage.jsp</url-pattern>  	
+  </filter-mapping>
+  <filter>
+  	<filter-name>RightValidationFilter</filter-name>
+  	<filter-class>com.yc.filter.RightValidationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>RightValidationFilter</filter-name>
+  	<url-pattern>/count.jsp</url-pattern>
+  	<url-pattern>/customconsult.jsp</url-pattern>
+  	<url-pattern>/customdata.jsp</url-pattern>
+  	<url-pattern>/customdev.jsp</url-pattern>
+  	<url-pattern>/department.jsp</url-pattern>
+  	<url-pattern>/jobmanage.jsp</url-pattern>
+  	<url-pattern>/report.jsp</url-pattern>
+  	<url-pattern>/usermanage.jsp</url-pattern>
+  	<url-pattern>/rightmanage.jsp</url-pattern>  	
+  </filter-mapping>
 </web-app>
